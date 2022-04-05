@@ -11,7 +11,7 @@ function App() {
     <GithubProvider>
       <Router>
         <div className='flex flex-col justify-between h-screen'>
-          <Navbar />
+          <Navbar title='GitHub Finder' />
 
           <main className='container mx-auto px-3 pb-12'>
             <Routes>
