@@ -16,33 +16,44 @@ export const GithubProvider = ({ children }) => {
 
   const setLoading = () => dispatch({ type: 'SET_LOADING' });
 
-  // Get initial users (testing purpose)
-  const fetchUsers = async () => {
+  // Search users
+  const searchUsers = async (text) => {
     // Display the spinner while fetching data
     setLoading();
 
-    const response = await fetch(`${GITHUB_URL}/users`, {
+    const params = new URLSearchParams({
+      q: text,
+    });
+
+    const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
       headers: {
         Authorization: `token ${GITHUB_TOKEN}`,
       },
     });
 
-    const data = await response.json();
+    const { items } = await response.json();
 
     dispatch({
       type: 'GET_USERS',
       payload: {
-        users: data,
+        users: items,
       },
     });
   };
+
+  // Clear users
+  const clearUsers = () =>
+    dispatch({
+      type: 'CLEAR_USERS',
+    });
 
   return (
     <GithubContext.Provider
       value={{
         users: state.users,
         loading: state.loading,
-        fetchUsers,
+        searchUsers,
+        clearUsers,
       }}
     >
       {children}
