@@ -3,18 +3,37 @@ import { useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import GithubContext from '../../context/github/GithubContext';
 import Spinner from '../layout/Spinner';
+import RepoList from '../repos/RepoList';
 
 function User() {
-  const { loading, user, getUser } = useContext(GithubContext);
+  const { loading, user, getUser, getUserRepos, repos } =
+    useContext(GithubContext);
 
   // access the params of the current route
   const params = useParams();
 
   useEffect(() => {
     getUser(params.login);
+    getUserRepos(params.login);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { login, name, avatar_url, html_url, type, hireable, bio } = user;
+  const {
+    login,
+    name,
+    avatar_url,
+    html_url,
+    type,
+    hireable,
+    bio,
+    location,
+    blog,
+    twitter_username,
+    followers,
+    following,
+    public_repos,
+    public_gists,
+  } = user;
 
   if (loading) {
     return <Spinner />;
@@ -63,9 +82,75 @@ function User() {
                 </a>
               </div>
             </div>
+
+            <div className='w-full rounded-lg shadow-md bg-base-100 stats'>
+              {location && (
+                <div className='stat'>
+                  <div className='stat-title text-md'>Location</div>
+                  <div className='stat-value text-lg'>{location}</div>
+                </div>
+              )}
+              {blog && (
+                <div className='stat'>
+                  <div className='stat-title text-md'>Website</div>
+                  <div className='stat-value text-lg'>
+                    <a href={blog} target='_blank' rel='noreferrer'>
+                      {blog}
+                    </a>
+                  </div>
+                </div>
+              )}
+              {twitter_username && (
+                <div className='stat'>
+                  <div className='stat-title text-md'>Twitter</div>
+                  <div className='stat-value text-lg'>
+                    <a
+                      href={`http://twitter.com/${twitter_username}`}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      {twitter_username}
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className='w-full rounded-lg shadow-md bg-base-100 stats'>
+          <div className='stat'>
+            <div className='stat-title text-md'>Followers</div>
+            <div className='stat-value text-lg'>{followers}</div>
+            <div className='stat-figure text-secondary'>
+              <FaUsers className='text-3xl' />
+            </div>
+          </div>
+          <div className='stat'>
+            <div className='stat-title text-md'>Following</div>
+            <div className='stat-value text-lg'>{following}</div>
+            <div className='stat-figure text-secondary'>
+              <FaUserFriends className='text-3xl' />
+            </div>
+          </div>
+          <div className='stat'>
+            <div className='stat-title text-md'>Public Repos</div>
+            <div className='stat-value text-lg'>{public_repos}</div>
+            <div className='stat-figure text-secondary'>
+              <FaCodepen className='text-3xl' />
+            </div>
+          </div>
+          <div className='stat'>
+            <div className='stat-title text-md'>Public Gists</div>
+            <div className='stat-value text-lg'>{public_gists}</div>
+            <div className='stat-figure text-secondary'>
+              <FaStore className='text-3xl' />
+            </div>
           </div>
         </div>
       </div>
+
+      <RepoList repos={repos} />
     </>
   );
 }
