@@ -13,12 +13,6 @@ export const GithubProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(githubReducer, initialState);
 
-  // Clear users
-  // const clearUsers = () =>
-  //   dispatch({
-  //     type: 'CLEAR_USERS',
-  //   });
-
   return (
     <GithubContext.Provider
       value={{
